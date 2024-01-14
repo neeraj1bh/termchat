@@ -6,13 +6,17 @@ from langchain.prompts import (
     MessagesPlaceholder,
 )
 from dotenv import load_dotenv
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferMemory, FileChatMessageHistory
 
 load_dotenv()
 
 chat = ChatOpenAI()
 
-memory = ConversationBufferMemory(memory_key="messages", return_messages=True)
+memory = ConversationBufferMemory(
+    chat_memory=FileChatMessageHistory("messages.json"),
+    memory_key="messages",
+    return_messages=True,
+)
 
 prompt = ChatPromptTemplate(
     input_variables=["content", "messages"],
