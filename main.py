@@ -6,16 +6,24 @@ from langchain.prompts import (
     MessagesPlaceholder,
 )
 from dotenv import load_dotenv
-from langchain.memory import ConversationBufferMemory, FileChatMessageHistory
+from langchain.memory import (
+    ConversationBufferMemory,
+    FileChatMessageHistory,
+    ConversationSummaryMemory,
+)
 
 load_dotenv()
 
-chat = ChatOpenAI()
+chat = ChatOpenAI(verbose=True)
 
-memory = ConversationBufferMemory(
-    chat_memory=FileChatMessageHistory("messages.json"),
-    memory_key="messages",
-    return_messages=True,
+# memory = ConversationBufferMemory(
+#     chat_memory=FileChatMessageHistory("messages.json"),
+#     memory_key="messages",
+#     return_messages=True,
+# )
+
+memory = ConversationSummaryMemory(
+    memory_key="messages", return_messages=True, llm=chat
 )
 
 prompt = ChatPromptTemplate(
@@ -26,7 +34,7 @@ prompt = ChatPromptTemplate(
     ],
 )
 
-chain = LLMChain(llm=chat, prompt=prompt, memory=memory)
+chain = LLMChain(llm=chat, prompt=prompt, memory=memory, verbose=True)
 
 while True:
     content = input(">> ")
